@@ -54,7 +54,7 @@ defmodule Katty.MixProject do
       # ADDITIONAL PACKAGES
       {:absinthe, "~> 1.7.0"},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
-      {:dialyxir, "~> 1.2", only: [:dev]},
+      {:dialyxir, "~> 0.5", only: [:dev]},
       {:excoveralls, "~> 0.7.1", only: :test},
       {:absinthe_plug, "~> 1.5.8"},
       {:guardian, "~> 2.0"},

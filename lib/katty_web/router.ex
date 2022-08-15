@@ -52,11 +52,6 @@ defmodule KattyWeb.Router do
   #   pipe_through :api
   # end
 
-  scope path: "/feature-flags" do
-    pipe_through [:browser, :require_current_admin]
-    forward "/", FunWithFlags.UI.Router, namespace: "feature-flags"
-  end
-
 
   scope "/api" do
     pipe_through :graphql

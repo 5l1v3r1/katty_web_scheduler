@@ -2,8 +2,8 @@ import Config
 
 # Configure your database
 config :katty, Katty.Repo,
-  username: "changeme",
-  password: "changeme",
+  username: "elixir",
+  password: "elixir",
   hostname: "localhost",
   database: "katty_dev",
   stacktrace: true,

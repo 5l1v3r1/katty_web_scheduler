@@ -55,7 +55,8 @@
             <td class="text-right">
               <span><%= live_redirect "Show", to: Routes.admin_user_show_path(@socket, :show, user), class: "link link-primary" %></span>
               <span><%= live_redirect "Edit", to: Routes.admin_user_show_path(@socket, :show, user), class: "link link-primary" %></span>
-              <span><%= live_redirect "Delete", to: Routes.admin_user_show_path(@socket, :show, user), class: "link link-primary" %></span>
+
+              <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: user.id, data: [confirm: "Are you sure?"], class: "link link-primary" %></span>
             </td>
           </tr>
         <% end %>

@@ -38,6 +38,14 @@ defmodule KattyWeb.Admin.UserLive.Index do
     |> assign(:params, params)
   end
 
+  @impl true
+  def handle_event("delete", %{"id" => id}, socket) do
+    user = Users.get_user!(id)
+    {:ok, _} = Users.delete_user(user)
+
+    {:noreply, assign(socket, get_users_assigns(%{}))}
+  end
+
   defp get_users_assigns(params) do
     case Users.paginate_users(params) do
       {:ok, assigns} -> assigns

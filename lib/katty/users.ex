@@ -67,6 +67,10 @@ defmodule Katty.Users do
     |> Repo.preload(:personal_account)
   end
 
+  def delete_user(%User{} = user) do
+    Repo.delete(user)
+  end
+
   @doc """
   Returns memberships and accounts associations for a user.
 
