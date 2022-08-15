@@ -1,0 +1,15 @@
+<div>
+  <.form
+    let={f}
+    for={@changeset}
+    id="account-form"
+    phx-target={@myself}
+    phx-submit="save">
+
+    <div class="flex items-center">
+      <%= text_input f, :name, phx_hook: "Focus", placeholder: "Add name of the team", class: "input input-bordered" %>
+      <%= submit "Save", phx_disable_with: "Saving...", class: "ml-2 btn btn-primary" %>
+    </div>
+    <%= error_tag f, :name %>
+  </.form>
+</div>

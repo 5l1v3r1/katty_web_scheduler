@@ -1,0 +1,67 @@
+<.admin_page_heading title="User">
+  <:link><%= live_redirect "Dashboard", to: Routes.admin_dashboard_index_path(@socket, :index) %></:link>
+  <:link><%= live_redirect "Users", to: Routes.admin_user_index_path(@socket, :index) %></:link>
+  <:link><%= live_redirect "User", to: Routes.admin_user_show_path(@socket, :show, @user) %></:link>
+
+  <%= link to: Routes.admin_user_impersonation_path(@socket, :create, @user.id), method: :post, class: "btn btn-outline" do %>
+    Impersonate
+  <% end %>
+</.admin_page_heading>
+
+<div class="flex flex-wrap">
+  <div class="w-full lg:w-2/3 grid grid-cols-1 gap-8">
+    <.admin_card>
+      <div class="flex items-center justify-between px-4 py-3 border-b border-base-200">
+        <div class="prose">
+          <h3>Show User</h3>
+        </div>
+      </div>
+      <div class="card-body prose">
+
+        <div>
+          <strong>Email:</strong>
+          <%= @user.email %>
+        </div>
+
+        <div>
+          <strong>Signed up:</strong>
+          <%= Calendar.strftime @user.inserted_at, "%x" %>
+        </div>
+
+      </div>
+      <div class="border-t card-actions border-base-200">
+        <%= live_redirect "Back", to: Routes.admin_user_index_path(@socket, :index), class: "btn btn-link" %>
+      </div>
+    </.admin_card>
+
+    <.admin_card>
+      <div class="overflow-x-auto">
+        <table class="table w-full">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%= for %{account: %{} = account} = membership <- @memberships do %>
+              <tr id={"membership-#{membership.id}"}>
+                <td>
+                  <%= account.name %>
+                  <%= if account.personal do %>
+                    <div class="badge badge-outline">Personal</div>
+                  <% end %>
+                </td>
+                <td>
+                  <div class="badge badge-success">
+                    <%= String.capitalize("#{membership.role}") %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </.admin_card>
+  </div>
+</div>

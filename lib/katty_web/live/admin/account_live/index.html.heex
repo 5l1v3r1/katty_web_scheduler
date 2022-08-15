@@ -1,0 +1,56 @@
+<%= if @live_action in [:new, :edit] do %>
+  <.modal id="modal" return_to={Routes.admin_account_index_path(@socket, :index)}>
+    <:modal_title><%= @page_title %></:modal_title>
+    <%= live_component KattyWeb.Admin.AccountLive.FormComponent,
+      id: @account.id || :new,
+      account: @account,
+      action: @live_action,
+      return_to: Routes.admin_account_index_path(@socket, :index) %>
+  </.modal>
+<% end %>
+
+<.admin_page_heading title="Accounts">
+  <:link><%= live_redirect "Dashboard", to: Routes.admin_dashboard_index_path(@socket, :index) %></:link>
+  <:link><%= live_redirect "Accounts", to: Routes.admin_account_index_path(@socket, :index) %></:link>
+</.admin_page_heading>
+
+<.admin_card>
+  <div class="overflow-x-auto">
+    <table class="table w-full">
+      <thead>
+        <tr>
+          <th>
+            <.data_table_link sort={:email} params={@params}>
+              Email
+            </.data_table_link>
+          </th>
+          <th>
+            <.data_table_link sort={:inserted_at} params={@params}>
+              Created
+            </.data_table_link>
+          </th>
+
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="accounts">
+        <%= for account <- @entries do %>
+          <tr id={"account-#{account.id}"} class="text-sm">
+            <td><%= account.name %></td>
+            <td><%= Calendar.strftime account.inserted_at, "%x" %></td>
+            <td class="text-right">
+              <span><%= live_redirect "Show", to: Routes.admin_account_show_path(@socket, :show, account), class: "link link-primary" %></span>
+              <span><%= live_patch "Edit", to: Routes.admin_account_index_path(@socket, :edit, account), class: "link link-primary" %></span>
+              <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: account.id, data: [confirm: "Are you sure?"], class: "link link-primary" %></span>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+  </div>
+
+  <div class="mt-2 mb-4">
+    <.pagination params={@params} {@pagination_assigns} />
+  </div>
+</.admin_card>

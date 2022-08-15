@@ -1,0 +1,65 @@
+<%= if @live_action in [:edit] do %>
+  <.modal id="modal" return_to={Routes.admin_account_show_path(@socket, :show, @account)}>
+    <:modal_title><%= @page_title %></:modal_title>
+    <%= live_component KattyWeb.Admin.AccountLive.FormComponent,
+      id: @account.id,
+      account: @account,
+      action: @live_action,
+      return_to: Routes.admin_account_show_path(@socket, :show, @account) %>
+  </.modal>
+<% end %>
+
+<.admin_page_heading title="Show Account">
+  <:link><%= live_redirect "Dashboard", to: Routes.admin_dashboard_index_path(@socket, :index) %></:link>
+  <:link><%= live_redirect "Accounts", to: Routes.admin_account_index_path(@socket, :index) %></:link>
+  <:link><%= live_redirect @account.name, to: Routes.admin_account_show_path(@socket, :show, @account) %></:link>
+</.admin_page_heading>
+
+<div class="flex flex-wrap">
+  <div class="w-full lg:w-2/3 grid grid-cols-1 gap-8">
+    <.admin_card>
+      <div class="flex items-center justify-between px-4 py-3 border-b border-base-200">
+        <div class="prose">
+          <h3>Show Account</h3>
+        </div>
+      </div>
+      <div class="card-body prose">
+        <div>
+          <strong>Name:</strong>
+          <%= @account.name %>
+        </div>
+      </div>
+      <div class="border-t card-actions border-base-200">
+        <%= live_patch "Edit", to: Routes.admin_account_show_path(@socket, :edit, @account), class: "btn btn-link" %>
+        <%= live_redirect "Back", to: Routes.admin_account_index_path(@socket, :index), class: "btn btn-link" %>
+      </div>
+    </.admin_card>
+
+    <.admin_card>
+      <div class="overflow-x-auto">
+        <table class="table w-full">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%= for %{member: %{} = member} = membership <- @memberships do %>
+              <tr id={"member-#{member.id}"}>
+                <td>
+                  <%= member.email %>
+                </td>
+                <td>
+                  <div class="badge badge-success">
+                    <%= String.capitalize("#{membership.role}") %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </.admin_card>
+  </div>
+</div>

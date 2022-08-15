@@ -1,0 +1,11 @@
+<main role="main" class="container max-w-6xl px-4 mx-auto mb-8">
+  <p class="alert alert-success" role="alert"
+    phx-click="lv:clear-flash"
+    phx-value-key="info"><%= live_flash(@flash, :info) %></p>
+
+  <p class="alert alert-warning" role="alert"
+    phx-click="lv:clear-flash"
+    phx-value-key="error"><%= live_flash(@flash, :error) %></p>
+
+  <%= @inner_content %>
+</main>

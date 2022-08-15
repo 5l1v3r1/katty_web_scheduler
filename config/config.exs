@@ -83,7 +83,7 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
-# Use Jason for JSON parsing 
+# Use Jason for JSON parsing
 config :phoenix, :json_library, Jason
 
 config :katty, Katty.Users.Guardian,
@@ -107,7 +107,7 @@ config :katty, Oban,
   ]
 
   config :recaptcha,
-  public_key:  "" #  set your key
-secret:  ""  # This is the key to always positive results from captcha change with your key once created.
+  public_key:  "6LePFnQhAAAAAIcEqTTTSGzjtc8AU958mWeEnc6X",
+secret:  "6LePFnQhAAAAAMzCi0ZJXdIbox2hCH1Y7djmndEA"
 
 import_config "#{config_env()}.exs"

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" class="h-full bg-base-200">
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <%= csrf_meta_tag() %>
+    <%= live_title_tag assigns[:page_title] || app_name(), suffix: " · Katty" %>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"/> <!--Replace with your tailwind.css once created-->
+    <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet"> <!--Totally optional :) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js" integrity="sha256-xKeoJ50pzbUGkpQxDYHD7o7hxe0LaOGeguUidbq6vis=" crossorigin="anonymous"></script>
+    <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")}/>
+    <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>
+  </head>
+  <body class="h-full text-base-content">
+
+    <div x-data="{ open: false }" @keydown.window.escape="open = false" class="flex h-full">
+      <!-- Off-canvas menu for mobile, show/hide based on off-canvas menu state. -->
+      <div x-show="open" class="relative z-40 lg:hidden" role="dialog" aria-modal="true">
+        <!-- Off-canvas menu backdrop -->
+        <div
+          x-show="open"
+          x-transition:enter="transition-opacity ease-linear duration-300"
+          x-transition:enter-start="opacity-0"
+          x-transition:enter-end="opacity-100"
+          x-transition:leave="transition-opacity ease-linear duration-300"
+          x-transition:leave-start="opacity-100"
+          x-transition:leave-end="opacity-0"
+          class="fixed inset-0 bg-neutral-focus bg-opacity-30"></div>
+
+        <div class="fixed inset-0 z-40 flex">
+          <!-- Off-canvas menu, show/hide based on off-canvas menu state. -->
+          <div
+            x-show="open"
+            x-transition:enter="transition ease-in-out duration-300 transform"
+            x-transition:enter-start="-translate-x-full"
+            x-transition:enter-end="translate-x-0"
+            x-transition:leave="transition ease-in-out duration-300 transform"
+            x-transition:leave-start="translate-x-0"
+            x-transition:leave-end="-translate-x-full"
+            class="relative flex flex-col flex-1 w-full max-w-xs shadow-lg bg-base-100 focus:outline-none" @click.away="open = false">
+
+            <!-- Close button, show/hide based on off-canvas menu state. -->
+            <div x-show="open"
+                 x-transition:enter="ease-in-out duration-300"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 x-transition:leave="ease-in-out duration-300"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 class="absolute top-0 right-0 pt-4 -mr-12">
+              <button type="button" class="flex items-center justify-center w-10 h-10 ml-1 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-base-100" @click="open = false">
+                <span class="sr-only">Close sidebar</span>
+                <svg class="w-6 h-6 base-content text-opacity-50" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
+            </div>
+
+            <div class="pt-5 pb-4">
+              <div class="flex items-center flex-shrink-0 px-4">
+                <svg class="w-10 h-10 p-2 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
+                <h2 class="text-xl font-semibold text-base-content text-opacity-80">Admin</h2>
+              </div>
+              <nav aria-label="Sidebar" class="mt-5">
+                <div class="px-2 space-y-1">
+                  <svg class="h-6 w-6 text-purple-500"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" /></svg>
+                  <%= live_redirect to: Routes.admin_dashboard_index_path(@conn, :index), class: "flex items-center p-2 text-base font-medium text-base-content text-opacity-80 group rounded-md hover:text-opacity-100" do %>
+                  <svg class="h-6 w-6 text-purple-500"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" /></svg>                    Dashboard
+                  <% end %>
+
+                  <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
+                    <%= live_redirect to: Routes.live_dashboard_path(@conn, :home), class: "flex items-center p-2 text-base font-medium text-base-content text-opacity-80 group rounded-md hover:text-opacity-100" do %>
+                      <svg class="w-6 h-6 mr-4 text-primary" xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="currentColor" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><polyline points="32 128 72 128 88 104 120 152 136 128 160 128" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></polyline><path d="M28.1,96c-.1-1.3-.1-2.7-.1-4A52,52,0,0,1,128,72h0A52,52,0,0,1,228,92c0,68-100,124-100,124s-39.9-22.4-69.3-56" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path></svg>
+                      LiveDashboard
+                    <% end %>
+                  <% end %>
+
+                  <%= live_redirect to: Routes.admin_user_index_path(@conn, :index), class: "flex items-center p-2 text-base font-medium text-base-content text-opacity-80 group rounded-md hover:text-opacity-100" do %>
+                    <svg class="w-6 h-6 mr-4 text-primary" xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="currentColor" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><circle cx="128" cy="96" r="64" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="16"></circle><path d="M31,216a112,112,0,0,1,194,0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path></svg>
+                    Users
+                  <% end %>
+
+                  <%= live_redirect to: Routes.admin_account_index_path(@conn, :index), class: "flex items-center p-2 text-base font-medium text-base-content text-opacity-80 group rounded-md hover:text-opacity-100" do %>
+                    <svg class="w-6 h-6 mr-4 text-primary" xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="currentColor" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><circle cx="88" cy="108" r="52" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="16"></circle><path d="M155.4,57.9A54.5,54.5,0,0,1,169.5,56a52,52,0,0,1,0,104" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path><path d="M16,197.4a88,88,0,0,1,144,0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path><path d="M169.5,160a87.9,87.9,0,0,1,72,37.4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path></svg>
+                    Accounts
+                  <% end %>
+
+                  <!-- ADD ADDITIONAL MOBILE MENU ITEMS -->
+
+                </div>
+              </nav>
+            </div>
+            <div class="border-t border-base-content border-opacity-10">
+              <nav aria-label="Sidebar" class="mt-2">
+                <div class="px-2 space-y-1">
+
+                  <%= live_redirect to: Routes.admin_setting_edit_path(@conn, :edit), class: "flex items-center p-2 text-base font-medium text-base-content text-opacity-80 group rounded-md hover:text-opacity-100" do %>
+                    <svg class="w-6 h-6 mr-4 text-primary" xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="currentColor" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><circle cx="128" cy="128" r="48" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></circle><path d="M183.7,65.1q3.8,3.5,7.2,7.2l27.3,3.9a103.2,103.2,0,0,1,10.2,24.6l-16.6,22.1s.3,6.8,0,10.2l16.6,22.1a102.2,102.2,0,0,1-10.2,24.6l-27.3,3.9s-4.7,4.9-7.2,7.2l-3.9,27.3a103.2,103.2,0,0,1-24.6,10.2l-22.1-16.6a57.9,57.9,0,0,1-10.2,0l-22.1,16.6a102.2,102.2,0,0,1-24.6-10.2l-3.9-27.3q-3.7-3.5-7.2-7.2l-27.3-3.9a103.2,103.2,0,0,1-10.2-24.6l16.6-22.1s-.3-6.8,0-10.2L27.6,100.8A102.2,102.2,0,0,1,37.8,76.2l27.3-3.9q3.5-3.7,7.2-7.2l3.9-27.3a103.2,103.2,0,0,1,24.6-10.2l22.1,16.6a57.9,57.9,0,0,1,10.2,0l22.1-16.6a102.2,102.2,0,0,1,24.6,10.2Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path></svg>
+                    Settings
+                  <% end %>
+
+                  <%= live_redirect to: Routes.admin_session_path(@conn, :delete), method: :delete, class: "flex items-center p-2 text-base font-medium text-base-content text-opacity-80 group rounded-md hover:text-opacity-100" do %>
+                    <svg class="w-6 h-6 mr-4 text-primary" xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="currentColor" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><polyline points="174 86 216 128 174 170" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></polyline><line x1="104" y1="128" x2="216" y2="128" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></line><path d="M104,216H48a8,8,0,0,1-8-8V48a8,8,0,0,1,8-8h56" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path></svg>
+                    Sign Out
+                  <% end %>
+                </div>
+              </nav>
+
+            </div>
+          </div>
+
+          <div class="flex-shrink-0 w-14" aria-hidden="true">
+            <!-- Force sidebar to shrink to fit close icon -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Static sidebar for desktop -->
+      <div class="hidden lg:flex lg:flex-shrink-0">
+        <div class="flex flex-col w-20 border-r shadow-lg border-base-300">
+          <div class="flex flex-col flex-1 min-h-0 overflow-y-auto bg-base-100">
+            <div class="flex-1">
+              <div class="flex items-center justify-center py-4 bg-primary">
+
+                <svg class="h-8 w-8 text-white"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" /></svg>
+
+              </div>
+              <nav aria-label="Sidebar" class="flex flex-col items-center py-6 space-y-2">
+
+                <%= live_redirect to: Routes.admin_dashboard_index_path(@conn, :index), data_tooltip: "Dashboard", class: "flex items-center p-2 rounded-lg text-base-content text-opacity-70 hover:text-opacity-100" do %>
+                  <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="currentColor" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><path d="M24,184V161.1C24,103.6,70.2,56.2,127.6,56A104,104,0,0,1,232,160v24a8,8,0,0,1-8,8H32A8,8,0,0,1,24,184Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path><line x1="128" y1="56" x2="128" y2="88" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></line><line x1="27.5" y1="133.1" x2="58.5" y2="141.4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></line><line x1="228.5" y1="133.1" x2="197.5" y2="141.4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></line><line x1="103.4" y1="192" x2="171.8" y2="102.9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></line></svg>
+                  <span class="sr-only">Dashboard</span>
+                <% end %>
+
+                <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
+                  <%= live_redirect to: Routes.live_dashboard_path(@conn, :home), data_tooltip: "LiveDashboard", class: "flex items-center p-2 rounded-lg text-base-content text-opacity-70 hover:text-opacity-100" do %>
+                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="currentColor" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><polyline points="32 128 72 128 88 104 120 152 136 128 160 128" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></polyline><path d="M28.1,96c-.1-1.3-.1-2.7-.1-4A52,52,0,0,1,128,72h0A52,52,0,0,1,228,92c0,68-100,124-100,124s-39.9-22.4-69.3-56" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path></svg>
+                    <span class="sr-only">LiveDashboard</span>
+                  <% end %>
+                <% end %>
+
+                <%= live_redirect to: Routes.admin_user_index_path(@conn, :index), data_tooltip: "Users", class: "flex items-center p-2 rounded-lg text-base-content text-opacity-70 hover:text-opacity-100" do %>
+                  <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="currentColor" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><circle cx="128" cy="96" r="64" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="16"></circle><path d="M31,216a112,112,0,0,1,194,0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path></svg>
+                  <span class="sr-only">Users</span>
+                <% end %>
+
+                <%= live_redirect to: Routes.admin_account_index_path(@conn, :index), data_tooltip: "Accounts", class: "flex items-center p-2 rounded-lg text-base-content text-opacity-70 hover:text-opacity-100" do %>
+                  <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="currentColor" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"></rect><circle cx="88" cy="108" r="52" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="16"></circle><path d="M155.4,57.9A54.5,54.5,0,0,1,169.5,56a52,52,0,0,1,0,104" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path><path d="M16,197.4a88,88,0,0,1,144,0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path><path d="M169.5,160a87.9,87.9,0,0,1,72,37.4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path></svg>
+                  <span class="sr-only">Accounts</span>
+                <% end %>
+
+                <!-- ADD ADDITIONAL DESKTOP MENU ITEMS -->
+
+              </nav>
+            </div>
+            <div class="flex flex-shrink-0 pb-5">
+              <a href="#" class="flex-shrink-0 w-full">
+                <!-- Bottom Nav -->
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col flex-1 min-w-0 overflow-hidden">
+        <!-- Mobile top navigation -->
+        <div class="lg:hidden">
+          <div class="flex items-center justify-between px-4 py-2 border-b shadow-lg border-base-content border-opacity-10 bg-base-100 sm:px-6 lg:px-8">
+            <div class="flex items-center">
+              <svg class="w-10 h-10 p-2 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+              </svg>
+              <h2 class="text-xl font-semibold text-base-content text-opacity-80">Admin</h2>
+            </div>
+            <div>
+              <button @click="open = true" type="button" class="inline-flex items-center justify-center w-12 h-12 -mr-3 text-primary bg-base-100 rounded-md hover:bg-base-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-base-300">
+                <span class="sr-only">Open sidebar</span>
+                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="overflow-scroll">
+          <div class="items-center justify-between hidden px-8 py-2 lg:flex">
+            <div><!-- Can be used for search --></div>
+            <div class="flex items-center gap-2">
+              <div x-data="{ open: false }" x-on:click.outside="open = false" class="relative">
+                <button x-on:click="open = !open" class="btn btn-link text-base-content text-opacity-70">
+                  <svg class="flex-shrink-0 w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+
+                <ul x-show="open" x-transition.opacity class="absolute right-0 border shadow-lg menu bg-base-100 border-base-200 rounded-box w-52">
+                  <li>
+                    <%= live_redirect "Settings", to: Routes.admin_setting_edit_path(@conn, :edit) %>
+                  </li>
+                  <li>
+                    <%= link "Sign Out", to: Routes.admin_session_path(@conn, :delete), method: :delete %>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <main>
+            <div class="px-4 pt-8 pb-20 mx-auto max-w-7xl sm:px-6 md:px-8">
+              <%= @inner_content %>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+
+    <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-away.css" />
+    <style>
+      .tippy-box {
+        background-color: #333;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 13px;
+      }
+    </style>
+    <script type="module">
+      import tippy from 'https://cdn.skypack.dev/tippy.js';
+
+      const targets = document.querySelectorAll('[data-tooltip]')
+      targets.forEach(target => {
+        tippy(target, {
+          placement: 'right',
+          animation: 'shift-away',
+          content: target.dataset.tooltip
+        })
+      })
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@1.27.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.0.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming@2.0.0"></script>
+  </body>
+</html>

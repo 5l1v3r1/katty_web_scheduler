@@ -1,0 +1,68 @@
+<%= if @live_action == :new do %>
+  <.modal id="modal" return_to={Routes.admin_user_index_path(@socket, :index)}>
+    <:modal_title><%= @page_title %></:modal_title>
+    <%= live_component KattyWeb.Admin.UserLive.FormComponent,
+      id: @user.id || :new,
+      user: @user,
+      return_to: Routes.admin_user_index_path(@socket, :index) %>
+  </.modal>
+<% end %>
+
+<.admin_page_heading title="Users">
+  <:link><%= live_redirect "Dashboard", to: Routes.admin_dashboard_index_path(@socket, :index) %></:link>
+  <:link><%= live_redirect "Users", to: Routes.admin_user_index_path(@socket, :index) %></:link>
+
+  <%= live_patch to: Routes.admin_user_index_path(@socket, :new), class: "btn btn-outline" do %>
+    New User
+  <% end %>
+</.admin_page_heading>
+
+<.admin_card>
+  <div class="overflow-x-auto">
+    <table class="table w-full">
+      <thead>
+        <tr>
+          <th>
+            <.data_table_link sort={:username} params={@params}>
+              Username
+            </.data_table_link>
+          </th>
+           <th>
+            <.data_table_link sort={:email} params={@params}>
+              E-mail
+            </.data_table_link>
+          </th>         
+          <th>
+            <.data_table_link sort={:inserted_at} params={@params}>
+              Signed up
+            </.data_table_link>
+          </th>
+          <th>Impersonate</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="users">
+        <%= for user <- @entries do %>
+          <tr id={"user-#{user.id}"} class="text-sm">
+            <td><%= user.username %></td>
+            <td><%= user.email %></td>
+            <td><%= Calendar.strftime user.inserted_at, "%x" %></td>
+            <td>
+              <%= link to: Routes.admin_user_impersonation_path(@socket, :create, user.id), method: :post, class: "link link-primary" do %>
+                Impersonate
+              <% end %>
+            </td>          
+            <td class="text-right">
+              <span><%= live_redirect "Show", to: Routes.admin_user_show_path(@socket, :show, user), class: "link link-primary" %></span>
+              <span><%= live_redirect "Edit", to: Routes.admin_user_show_path(@socket, :show, user), class: "link link-primary" %></span>
+              <span><%= live_redirect "Delete", to: Routes.admin_user_show_path(@socket, :show, user), class: "link link-primary" %></span>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div class="mt-2 mb-4">
+    <.pagination params={@params} {@pagination_assigns} />
+  </div>
+</.admin_card>
