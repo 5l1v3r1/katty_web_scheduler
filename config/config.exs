@@ -107,7 +107,7 @@ config :katty, Oban,
   ]
 
   config :recaptcha,
-  public_key:  "",
-secret:  ""
+  public_key:  "test",
+secret:  "test"
 
 import_config "#{config_env()}.exs"
