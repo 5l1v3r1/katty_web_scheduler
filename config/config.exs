@@ -107,7 +107,7 @@ config :katty, Oban,
   ]
 
   config :recaptcha,
-  public_key:  "6LePFnQhAAAAAIcEqTTTSGzjtc8AU958mWeEnc6X",
-secret:  "6LePFnQhAAAAAMzCi0ZJXdIbox2hCH1Y7djmndEA"
+  public_key:  "",
+secret:  ""
 
 import_config "#{config_env()}.exs"
